@@ -6,7 +6,76 @@ page_load();
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<script type="text/javascript" src="jquery.js"></script> 
+<script type="text/javascript">
+function nuevoAjax()
+{ 
+    /* Crea el objeto AJAX. Esta funcion es generica para cualquier utilidad de este tipo, por
+    lo que se puede copiar tal como esta aqui */
+    var xmlhttp=false; 
+    try 
+    { 
+        // Creacion del objeto AJAX para navegadores no IE
+        xmlhttp=new ActiveXObject("Msxml2.XMLHTTP"); 
+    }
+    catch(e)
+    { 
+        try
+        { 
+            // Creacion del objet AJAX para IE 
+            xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); 
+        } 
+        catch(E) { xmlhttp=false; }
+    }
+    if (!xmlhttp && typeof XMLHttpRequest!='undefined') { xmlhttp=new XMLHttpRequest(); } 
+
+    return xmlhttp; 
+}
+
+function traerDatos1(tipoDato)
+{
+    // Obtendo la capa donde se muestran las respuestas del servidor
+    var capa=document.getElementById("demoArr");
+    // Creo el objeto AJAX
+    var ajax=nuevoAjax();
+    // Coloco el mensaje "Cargando..." en la capa
+    capa.innerHTML="Cargando...";
+    // Abro la conexión, envío cabeceras correspondientes al uso de POST y envío los datos con el método send del objeto AJAX
+    ajax.open("POST", "controler.php?decode=ok", true);
+    ajax.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    ajax.send("id="+tipoDato);
+
+    ajax.onreadystatechange=function()
+    {
+        if (ajax.readyState==4)
+        {
+            // Respuesta recibida. Coloco el texto plano en la capa correspondiente
+            capa.innerHTML=ajax.responseText;
+        }
+    }
+}
+function traerDatos2(tipoDato)
+{
+    // Obtendo la capa donde se muestran las respuestas del servidor
+    var capa=document.getElementById("demoArr");
+    // Creo el objeto AJAX
+    var ajax=nuevoAjax();
+    // Coloco el mensaje "Cargando..." en la capa
+    capa.innerHTML="Cargando...";
+    // Abro la conexión, envío cabeceras correspondientes al uso de POST y envío los datos con el método send del objeto AJAX
+    ajax.open("POST", "controler.php?matriz=ok", true);
+    ajax.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    ajax.send("id="+tipoDato);
+
+    ajax.onreadystatechange=function()
+    {
+        if (ajax.readyState==4)
+        {
+            // Respuesta recibida. Coloco el texto plano en la capa correspondiente
+            capa.innerHTML=ajax.responseText;
+        }
+    }
+}
+</script> 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link rel="stylesheet" type="text/css" href="alpaca.css" />
   <title></title>
@@ -40,15 +109,16 @@ page_load();
             <tr  class="ewTableRow">
             <td><?php echo $reglistpdf ['ID'] ?></td>
             <td><?php echo $reglistpdf ['msg_encriptado'] ?></td>
-            <td><a href = "indexs.php?decode=ok&id=<?php echo $reglistpdf ['ID'] ?>">DESENCRIPTAR</a>&nbsp;&nbsp;<a href = "indexs.php?matriz=ok&id=<?php echo $reglistpdf ['ID'] ?>">VerMatriz</a></td>
+            <td><a href = "#" onclick="traerDatos1(<?php echo $reglistpdf ['ID'] ?>)">DESENCRIPTARx</a>&nbsp;&nbsp;<a href = "#" onclick="traerDatos2(<?php echo $reglistpdf ['ID'] ?>)">VerMatrizx</a></td>
             </tr>
 <?php
         }
             ?>
 			</table>
 			</center>
-</form>
 
+</form>
+<div id="demoArr"></div>
 </body>
 </html>
 
@@ -58,24 +128,6 @@ function page_load(){
         $valor = $_POST['text'];
         $resultado = buscar($valor);
         echo "<h6>Resultado buscar</h6><br>".$resultado;
-    }
-    if(!empty($_GET['decode']) AND $_GET['decode'] == "ok"){
-        $valor = $_GET['id'];
-        $resultado1 = decodificar($valor);
-        echo "<h6>Resultado decodificar</h6><br>".$resultado1;
-    }
-    if(!empty($_GET['matriz']) AND $_GET['matriz'] == "ok"){
-        $valor = $_GET['id'];
-        $resultado2 = matriz($valor);
-        $dim = count($resultado2);
-        echo "<h6>Resultado matriz</h6><br>";
-        for($i = 0; $i<=$dim-1; $i++){
-            for($j = 0; $j<=$dim-1; $j++){
-                echo $resultado2[$i][$j];
-                //echo $valf;
-            }
-            echo "<br>";
-        } 
     }
     if(!empty($_POST['submit']) AND $_POST['submit'] == "Nuevo"){
         $valor = $_POST['text1'];

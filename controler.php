@@ -50,4 +50,22 @@ function agregar($msgdc){
 	$insert = "insert into mensajes (msg_encriptado) Values ('$msgcod')";
 	mysql_query($insert);
 }
+if(!empty($_GET['decode']) AND $_GET['decode'] == "ok"){
+        $valor = $_POST['id'];
+        $resultado1 = decodificar($valor);
+        echo "<h6>Resultado decodificar</h6><br>".$resultado1;
+    }
+    if(!empty($_GET['matriz']) AND $_GET['matriz'] == "ok"){
+        $valor = $_POST['id'];
+        $resultado2 = matriz($valor);
+        $dim = count($resultado2);
+        echo "<h6>Resultado matriz</h6><br>";
+        for($i = 0; $i<=$dim-1; $i++){
+            for($j = 0; $j<=$dim-1; $j++){
+                echo $resultado2[$i][$j];
+                //echo $valf;
+            }
+            echo "<br>";
+        } 
+    }
 ?>
