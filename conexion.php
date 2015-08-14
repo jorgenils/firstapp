@@ -20,5 +20,6 @@
 			return $conn;
 		}
 	}
-
+//esto es una prueba para ver quien toquetea el codigo y como reacciona git con esto 
+//git a creado un fork
 ?>
